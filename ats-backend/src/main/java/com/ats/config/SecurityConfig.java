@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/health").permitAll() // Health check
                         .requestMatchers("/api/seed/**").permitAll() // Seeder endpoint
                         .requestMatchers(HttpMethod.GET, "/api/jobs").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/jobs/{id}").permitAll()
