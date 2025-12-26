@@ -111,6 +111,7 @@ public class ApplicationService {
 
                 return DashboardStats.builder()
                                 .totalJobs(totalJobs)
+                                .activeJobs(activeJobs)
                                 .totalApplications(totalApplications)
                                 .applicationsByStatus(applicationsByStatus)
                                 .recentApplicationsByJob(recentApplicationsByJob)
