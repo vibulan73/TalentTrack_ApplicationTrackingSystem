@@ -55,7 +55,7 @@ const Dashboard = () => {
                     <div className="stat-card">
                         <div className="stat-icon primary">💼</div>
                         <div className="stat-content">
-                            <h3>{stats?.totalJobs || 0}</h3>
+                            <h3>{stats?.activeJobs || 0}</h3>
                             <p>Active Jobs</p>
                         </div>
                     </div>

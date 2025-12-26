@@ -13,6 +13,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class DashboardStats {
     private long totalJobs;
+    private long activeJobs;
     private long totalApplications;
     private Map<String, Long> applicationsByStatus;
     private Map<String, Long> recentApplicationsByJob;
