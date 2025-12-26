@@ -36,68 +36,6 @@ A modern, full-stack Applicant Tracking System built with React, Spring Boot, an
 | Database | PostgreSQL |
 | Deployment | Railway |
 
-## 📁 Project Structure
-
-```
-├── ats-backend/          # Spring Boot Backend
-│   ├── src/main/java/com/ats/
-│   │   ├── config/       # Security & CORS config
-│   │   ├── controller/   # REST endpoints
-│   │   ├── dto/          # Data Transfer Objects
-│   │   ├── model/        # JPA Entities
-│   │   ├── repository/   # Data repositories
-│   │   ├── security/     # JWT utilities
-│   │   └── service/      # Business logic
-│   └── Dockerfile
-│
-└── ats-frontend/         # React Frontend
-    └── src/
-        ├── api/          # Axios configuration
-        ├── components/   # Reusable components
-        ├── context/      # Auth context
-        └── pages/        # Application pages
-```
-
-## 🚀 Deployment to Railway
-
-### Prerequisites
-- Railway account (https://railway.app)
-- GitHub repository with the code
-
-### Step 1: Create Railway Project
-1. Go to [Railway](https://railway.app) and sign in
-2. Click "New Project"
-3. Select "Deploy from GitHub repo"
-4. Connect your GitHub repository
-
-### Step 2: Add PostgreSQL Database
-1. In your Railway project, click "New"
-2. Select "Database" → "PostgreSQL"
-3. Copy the `DATABASE_URL` from the Variables tab
-
-### Step 3: Deploy Backend
-1. Click "New" → "GitHub Repo"
-2. Select your repo and set Root Directory to `ats-backend`
-3. Add these environment variables:
-   ```
-   DATABASE_URL=<your-postgres-url>
-   JWT_SECRET=<generate-a-secure-64-char-secret>
-   CORS_ORIGINS=https://your-frontend-url.railway.app
-   UPLOAD_DIR=/app/uploads
-   ```
-4. Railway will automatically build and deploy
-
-### Step 4: Deploy Frontend
-1. Click "New" → "GitHub Repo"
-2. Select your repo and set Root Directory to `ats-frontend`
-3. Add environment variable:
-   ```
-   REACT_APP_API_URL=https://your-backend-url.railway.app/api
-   ```
-4. Railway will automatically build and deploy
-
-### Step 5: Update CORS
-After both are deployed, update the backend's `CORS_ORIGINS` with the actual frontend URL.
 
 ## 🖥️ Local Development
 
@@ -167,14 +105,27 @@ docker run --name ats-postgres \
 
 After starting the application, register a new account at `/register`.
 
-## 📸 Screenshots
-
-The application features a modern dark theme with:
-- Gradient accents
-- Glassmorphism effects
-- Responsive design
-- Status badges with colors
-
 ## License
 
 MIT
+
+## 🏗️ Design Decisions & Assumptions
+
+### Architecture Choices
+1.  **Separation of Concerns**: The project is split into `ats-backend` (Spring Boot) and `ats-frontend` (React). This creates a clean separation between data/business logic and UI, allowing for independent scaling and development.
+2.  **Filesystem Storage**: For simplicity and cost-effectiveness (avoiding extra cloud buckets like S3), file uploads (resumes) are stored in the local container filesystem.
+    *   *Trade-off*: In a multi-container or ephemeral environment (like free Railway tiers), files might not persist across restarts unless a persistent volume is used. This was chosen for getting started speed vs infrastructure complexity.
+3.  **Stateless Authentication**: JWT (JSON Web Tokens) was chosen over session cookies to keep the backend stateless, making it easier to scale horizontally and handling CORS more predictably across different domains.
+
+### Database Design
+- **Single Role System**: To keep the initial MVP lean, the system currently assumes a "Recruiter" role effectively for all registered users. Access control is binary (Public vs Authenticated).
+- **Hard Deletes**: Deleted jobs are hard-deleted from the database. A "Soft Delete" (`is_deleted` flag) was considered but omitted for simplicity in this version.
+- **Relational Integrity**: `Applications` are strictly linked to `Jobs`. If a Job is deleted, the database constraint ensures data consistency (cascading delete or error, depending on business rule).
+
+### Deployment Assumptions
+- **Railway Platform**: The configuration (`railway.toml`) is optimized for Railway's "Nixpacks" builder, specifically using `npx serve` for the frontend to maximize performance vs running the heavy dev server.
+- **Environment Variables**: The system acts as a "Cloud Native" app, relying entirely on environment variables (`DATABASE_URL`, `JWT_SECRET`, `CORS_ORIGINS`) rather than hardcoded configs, ensuring security and portability.
+
+### Frontend
+- **Client-Side Filtering**: For the dashboard list views, filtering and searching happens on the backend (API calls), which is more scalable than client-side filtering, though slightly more complex to implement.
+- **No Redux**: `React Context API` was used for Auth state instead of Redux. Redux would be overkill for the current state complexity (User + Theme).
