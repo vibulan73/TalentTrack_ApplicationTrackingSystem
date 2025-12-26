@@ -4,7 +4,6 @@ import api from '../api/axios';
 
 const ApplicationForm = () => {
     const { id } = useParams();
-    const navigate = useNavigate();
     const [job, setJob] = useState(null);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
@@ -16,22 +15,22 @@ const ApplicationForm = () => {
     const [resume, setResume] = useState(null);
 
     useEffect(() => {
+        const fetchJob = async () => {
+            try {
+                const response = await api.get(`/jobs/${id}`);
+                if (!response.data.active) {
+                    setError('This position is no longer accepting applications');
+                }
+                setJob(response.data);
+            } catch (error) {
+                setError('Job not found');
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchJob();
     }, [id]);
-
-    const fetchJob = async () => {
-        try {
-            const response = await api.get(`/jobs/${id}`);
-            if (!response.data.active) {
-                setError('This position is no longer accepting applications');
-            }
-            setJob(response.data);
-        } catch (error) {
-            setError('Job not found');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];

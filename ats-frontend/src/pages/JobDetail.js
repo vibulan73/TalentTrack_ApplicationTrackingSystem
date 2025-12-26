@@ -11,23 +11,23 @@ const JobDetail = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [jobRes, appsRes] = await Promise.all([
+                    api.get(`/jobs/${id}`),
+                    api.get(`/applications?jobId=${id}`)
+                ]);
+                setJob(jobRes.data);
+                setApplications(appsRes.data);
+            } catch (error) {
+                console.error('Error fetching job data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchData();
     }, [id]);
-
-    const fetchData = async () => {
-        try {
-            const [jobRes, appsRes] = await Promise.all([
-                api.get(`/jobs/${id}`),
-                api.get(`/applications?jobId=${id}`)
-            ]);
-            setJob(jobRes.data);
-            setApplications(appsRes.data);
-        } catch (error) {
-            console.error('Error fetching job data:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const updateStatus = async (applicationId, newStatus) => {
         try {

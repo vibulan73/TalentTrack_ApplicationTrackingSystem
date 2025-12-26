@@ -9,19 +9,19 @@ const PublicJobView = () => {
     const [error, setError] = useState('');
 
     useEffect(() => {
+        const fetchJob = async () => {
+            try {
+                const response = await api.get(`/jobs/${id}`);
+                setJob(response.data);
+            } catch (error) {
+                setError('Job not found or no longer available');
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchJob();
     }, [id]);
-
-    const fetchJob = async () => {
-        try {
-            const response = await api.get(`/jobs/${id}`);
-            setJob(response.data);
-        } catch (error) {
-            setError('Job not found or no longer available');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     if (loading) {
         return (

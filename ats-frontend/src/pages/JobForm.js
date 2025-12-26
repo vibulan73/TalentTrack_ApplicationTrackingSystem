@@ -14,23 +14,23 @@ const JobForm = () => {
     const isEditing = !!id;
 
     useEffect(() => {
+        const fetchJob = async () => {
+            setFetchLoading(true);
+            try {
+                const response = await api.get(`/jobs/${id}`);
+                setTitle(response.data.title);
+                setDescription(response.data.description || '');
+            } catch (error) {
+                setError('Failed to load job details');
+            } finally {
+                setFetchLoading(false);
+            }
+        };
+
         if (isEditing) {
             fetchJob();
         }
-    }, [id]);
-
-    const fetchJob = async () => {
-        setFetchLoading(true);
-        try {
-            const response = await api.get(`/jobs/${id}`);
-            setTitle(response.data.title);
-            setDescription(response.data.description || '');
-        } catch (error) {
-            setError('Failed to load job details');
-        } finally {
-            setFetchLoading(false);
-        }
-    };
+    }, [id, isEditing]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

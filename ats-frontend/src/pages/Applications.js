@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import StatusBadge from '../components/StatusBadge';
@@ -12,11 +12,7 @@ const Applications = () => {
     const [filterJob, setFilterJob] = useState('');
     const [filterStatus, setFilterStatus] = useState('');
 
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const [appsRes, jobsRes] = await Promise.all([
                 api.get('/applications'),
@@ -29,9 +25,9 @@ const Applications = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const handleSearch = async () => {
+    const handleSearch = useCallback(async () => {
         if (!searchQuery.trim()) {
             fetchData();
             return;
@@ -46,9 +42,9 @@ const Applications = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [searchQuery, fetchData]);
 
-    const handleFilter = async () => {
+    const handleFilter = useCallback(async () => {
         setLoading(true);
         try {
             const params = new URLSearchParams();
@@ -62,7 +58,11 @@ const Applications = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [filterJob, filterStatus]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     useEffect(() => {
         if (filterJob || filterStatus) {
@@ -70,7 +70,7 @@ const Applications = () => {
         } else if (!searchQuery) {
             fetchData();
         }
-    }, [filterJob, filterStatus]);
+    }, [filterJob, filterStatus, searchQuery, handleFilter, fetchData]);
 
     useEffect(() => {
         const delaySearch = setTimeout(() => {
@@ -79,7 +79,7 @@ const Applications = () => {
             }
         }, 300);
         return () => clearTimeout(delaySearch);
-    }, [searchQuery]);
+    }, [searchQuery, handleSearch]);
 
     const updateStatus = async (applicationId, newStatus) => {
         try {
