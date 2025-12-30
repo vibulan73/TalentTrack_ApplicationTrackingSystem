@@ -64,10 +64,6 @@ public class JobService {
         Job job = jobRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
 
-        if (!job.getCreatedBy().getId().equals(user.getId())) {
-            throw new RuntimeException("You are not authorized to update this job");
-        }
-
         job.setTitle(jobDto.getTitle());
         job.setDescription(jobDto.getDescription());
         if (jobDto.getActive() != null) {
@@ -82,10 +78,6 @@ public class JobService {
     public void deleteJob(Long id, User user) {
         Job job = jobRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
-
-        if (!job.getCreatedBy().getId().equals(user.getId())) {
-            throw new RuntimeException("You are not authorized to delete this job");
-        }
 
         jobRepository.delete(job);
     }
