@@ -33,6 +33,13 @@ public class JobService {
                 .collect(Collectors.toList());
     }
 
+    public List<JobDto> getAllJobs() {
+        return jobRepository.findAll()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
     public JobDto getJobById(Long id) {
         Job job = jobRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Job not found"));

@@ -1,5 +1,38 @@
 # TalentTrack - Applicant Tracking System
+Details about the features implemented in the Applicant Tracking System, in case it helps provide more clarity.
 
+###Job Creation & Public Application Links
+
+Recruiters can create job postings directly from the dashboard.
+
+Each job generates a public application link that can be shared with candidates.
+
+For example, this link allows applicants to apply for the Associate Software Engineer role:
+https://talenttrack.up.railway.app/careers/3
+
+Recruiters can deactivate a job at any time to stop accepting new applications for that role.
+
+Recruiter Dashboard Overview
+The dashboard provides a quick snapshot of hiring activity, including:
+Number of active jobs
+Total applications received
+New applications
+Candidates hired
+
+It also shows application status counts:
+New
+Shortlisted
+Interviewed
+Hired
+Rejected
+
+Application Management
+Recruiters can view all applications on a dedicated applications page.
+Applications can be searched and filtered for easier shortlisting.
+Recruiters can update the status of each application.
+All design decisions and assumptions are documented in the README as mentioned earlier.
+
+Please let me know if you’d like me to walk through any part of the system or clarify anything further. I’d be happy to do so.
 A modern, full-stack Applicant Tracking System built with React, Spring Boot, and PostgreSQL.
 
 ## 🚀 Features

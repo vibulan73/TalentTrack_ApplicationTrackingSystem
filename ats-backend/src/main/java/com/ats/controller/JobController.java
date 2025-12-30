@@ -32,6 +32,11 @@ public class JobController {
         return ResponseEntity.ok(jobService.getJobsByUser(user));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<JobDto>> getAllJobsForRecruiters() {
+        return ResponseEntity.ok(jobService.getAllJobs());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<JobDto> getJobById(@PathVariable Long id) {
         return ResponseEntity.ok(jobService.getJobById(id));

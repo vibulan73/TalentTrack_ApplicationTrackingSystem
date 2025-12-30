@@ -13,7 +13,7 @@ const Jobs = () => {
 
     const fetchJobs = async () => {
         try {
-            const response = await api.get('/jobs/my');
+            const response = await api.get('/jobs/all');
             setJobs(response.data);
         } catch (error) {
             console.error('Error fetching jobs:', error);
