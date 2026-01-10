@@ -3,6 +3,8 @@ Details about the features implemented in the Applicant Tracking System, in case
 
 ###Job Creation & Public Application Links
 
+https://talenttrack.up.railway.app
+
 Recruiters can create job postings directly from the dashboard.
 
 Each job generates a public application link that can be shared with candidates.
